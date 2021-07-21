@@ -73,7 +73,7 @@
 #define MBED_CONF_ESP8266_SNTP_SERVER2                                        ""                                                                                               // set by library:esp8266
 #define MBED_CONF_ESP8266_SNTP_TIMEZONE                                       0                                                                                                // set by library:esp8266
 #define MBED_CONF_ESP8266_SOCKET_BUFSIZE                                      8192                                                                                             // set by library:esp8266
-#define MBED_CONF_EVENTS_PRESENT                                              1                                                                                                // set by library:events
+//#define MBED_CONF_EVENTS_PRESENT                                              1                                                                                                // set by library:events
 #define MBED_CONF_EVENTS_SHARED_DISPATCH_FROM_APPLICATION                     0                                                                                                // set by library:events
 #define MBED_CONF_EVENTS_SHARED_EVENTSIZE                                     768                                                                                              // set by library:events
 #define MBED_CONF_EVENTS_SHARED_HIGHPRIO_EVENTSIZE                            256                                                                                              // set by library:events
