@@ -28,7 +28,7 @@
 #include "qspi_api.h"
 #include "ospi_api.h"
 #include "can_api.h"
-#include <cstddef>
+#include <mstd_cstddef>
 
 #if STATIC_PINMAP_READY
 #include "PeripheralPinMaps.h"

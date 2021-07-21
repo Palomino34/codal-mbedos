@@ -29,7 +29,7 @@
 #include "platform/SingletonPtr.h"
 #include "platform/PlatformMutex.h"
 
-#include <type_traits>
+#include <mstd_type_traits>
 
 namespace mbed {
 /** \addtogroup drivers-public-api */

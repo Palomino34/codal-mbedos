@@ -18,16 +18,13 @@
 #define MBED_CALLBACK_H
 
 #include <cstring>
-// TQD #include <cstddef>
-#include <cstddef>
+#include <mstd_cstddef>
 #include <stdint.h>
-#include <new>
+#include <mstd_new>
 #include "platform/mbed_assert.h"
 #include "platform/mbed_toolchain.h"
-//TQD #include <type_traits>
-#include <type_traits>
-// TQD #include <functional>
-#include <functional>
+#include <mstd_type_traits>
+#include <mstd_functional>
 
 // Controlling switches from config:
 // MBED_CONF_PLATFORM_CALLBACK_NONTRIVIAL - support storing non-trivial function objects
