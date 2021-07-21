@@ -120,7 +120,7 @@
 #define MBED_CONF_FAT_CHAN_FF_VOLUME_STRS                                     "RAM","NAND","CF","SD","SD2","USB","USB2","USB3"                                                 // set by library:fat_chan
 #define MBED_CONF_FAT_CHAN_FLUSH_ON_NEW_CLUSTER                               0                                                                                                // set by library:fat_chan
 #define MBED_CONF_FAT_CHAN_FLUSH_ON_NEW_SECTOR                                1                                                                                                // set by library:fat_chan
-#define MBED_CONF_FILESYSTEM_PRESENT                                          1                                                                                                // set by library:filesystem
+#define MBED_CONF_FILESYSTEM_PRESENT                                          0                                                                                                // set by library:filesystem
 #define MBED_CONF_GEMALTO_CINTERION_BAUDRATE                                  115200                                                                                           // set by library:GEMALTO_CINTERION
 #define MBED_CONF_GEMALTO_CINTERION_PROVIDE_DEFAULT                           0                                                                                                // set by library:GEMALTO_CINTERION
 #define MBED_CONF_GENERIC_AT3GPP_BAUDRATE                                     115200                                                                                           // set by library:GENERIC_AT3GPP
