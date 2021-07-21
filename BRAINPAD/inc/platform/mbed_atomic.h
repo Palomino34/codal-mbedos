@@ -883,7 +883,7 @@ MBED_FORCEINLINE uint64_t core_util_atomic_fetch_xor_explicit_u64(volatile uint6
 #ifdef __cplusplus
 } // extern "C"
 
-#include <mstd_type_traits>
+// #include <mstd_type_traits>
 
 // For each operation, two overloaded templates:
 // * one for non-pointer types, which has implementations based on the
