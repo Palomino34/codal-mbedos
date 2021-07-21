@@ -58,7 +58,7 @@ namespace codal
           *
           *       Buffers aren't allocated until the first send or receive respectively.
           */
-        Serial::Serial(PinName tx, PinName rx, uint8_t rxBufferSize, uint8_t txBufferSize) : codal::Serial(tx, rx), mbed::RawSerial(tx,rx)
+        Serial::Serial(PinName tx, PinName rx, uint8_t rxBufferSize, uint8_t txBufferSize) : codal::Serial(tx, rx)/*, mbed::RawSerial(tx,rx)*/
         {
             // + 1 so there is a usable buffer size, of the size the user requested.
             this->rxBuffSize = rxBufferSize + 1;
@@ -818,7 +818,7 @@ namespace codal
 
             this->baudrate = baudrate;
 
-            RawSerial::baud(baudrate);
+            /*RawSerial::baud(baudrate);*/
 
             return DEVICE_OK;
         }
@@ -1143,7 +1143,7 @@ namespace codal
           */
         int Serial::attach(SerialInterruptType interruptType, void (Serial::*fp)())
         {
-            mbed::RawSerial::attach(callback(this, fp), (interruptType == RxInterrupt) ? RxIrq : TxIrq);
+            /*mbed::RawSerial::attach(callback(this, fp), (interruptType == RxInterrupt) ? RxIrq : TxIrq);*/
             return DEVICE_OK;
         }
 
@@ -1157,7 +1157,7 @@ namespace codal
         int Serial::detach(SerialInterruptType interruptType)
         {
             //we detach by sending a bad value to attach, for some weird reason...
-            mbed::RawSerial::attach(callback((Serial *)NULL, &Serial::dataReceived),(interruptType == RxInterrupt) ? RxIrq : TxIrq);
+            /*mbed::RawSerial::attach(callback((Serial *)NULL, &Serial::dataReceived),(interruptType == RxInterrupt) ? RxIrq : TxIrq);*/
             return DEVICE_OK;
         }
     }
