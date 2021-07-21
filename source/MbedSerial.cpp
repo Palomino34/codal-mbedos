@@ -95,7 +95,7 @@ namespace codal
                 return;
 
             //get the received character
-            char c = getc();
+            char c = 0;//getc(); TQD
 
             int delimeterOffset = 0;
             int delimLength = this->delimeters.length();
@@ -144,7 +144,7 @@ namespace codal
                 return;
 
             //send our current char
-            putc(txBuff[txBuffTail]);
+            //putc(txBuff[txBuffTail]); //TQD
 
             uint16_t nextTail = (txBuffTail + 1) % txBuffSize;
 
@@ -845,7 +845,7 @@ namespace codal
 
             detach(RxInterrupt);
 
-            serial_init(&_serial, tx, rx);
+            // serial_init(&_serial, tx, rx);  TQD
 
             attach(RxInterrupt, &Serial::dataReceived);
 
