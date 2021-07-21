@@ -16,32 +16,38 @@ from subprocess import check_output
 #
 def create_dir(directory):
     if not os.path.exists(directory):
-        call(["mkdir", "-p", directory])
+#print ("making1...." + directory)
+        #call(["mkdir", "-p", directory])
+        os.makedirs(directory)
+        #print ("making2....")    
 
 #
 # Function to parse the link file descriptions, and return a list of object files.
 #
 def generate_lib(infilename, outfile) :
-
     infile = open(infilename)
 
     params = infile.readline().split(" ")
-    #cmd = ["arm-none-eabi-ar", "rcs", outfile]
+    #cmd = ["arm-none-eabi-ar", "-rcs", outfile]
     cmd = ["arm-none-eabi-ld", "-Ur", "-o", outfile]
     objs = []
+    
 
     for item in params :
-        if item.endswith(".o\"") and not item.endswith("/main.o\"") :
+        #print(item)
+        if item.endswith(".o") and not item.endswith("main.o") :
             if item.startswith('"') and item.endswith('"') :
-                objs.append(item[1:-1])
+                objs.append(item[1:-1])                
             else :
-                objs.append(item)
-
+                objs.append(item)               
     # We should no have filtered out all but the object files.
     #for item in objs:
     #    print item 
-
-    call(cmd+objs)
+   
+    for item in objs:
+        shit = []
+        shit.append(item)   
+        call(cmd + shit)
 
 #
 # Function to parse the link file descriptions, and return a list of object files.
@@ -53,15 +59,23 @@ def generate_o(infilename, outdir) :
     params = infile.readline().split(" ")
 
     for item in params :
-        if item.endswith(".o\"") and not item.endswith("/main.o\"") :
+        if item.endswith(".o") and not item.endswith("main.o") :
             if item.startswith('"') and item.endswith('"') :
                 obj = item[1:-1]
             else :
                 obj = item
 
-            cmd = ["cp", obj, outdir]
-            print(cmd)
-            call (cmd)
+            #print(obj)
+            
+            obj = obj.replace("/","\\")
+            outdir = outdir.replace("/","\\")
+            #cmd = ["copy /y ", obj , outdir ]    
+            #print(cmd)
+            #call (cmd)
+            cmd = 'copy /y ' +  obj + ' ' + outdir + ' > NUL'
+            #print(cmd)
+            os.system(cmd)
+            #shutil.copy('file1.txt', 'file3.txt')
 
 
 #
@@ -101,13 +115,22 @@ def generate_includes(infilename, outdir) :
     # We should no have filtered out all but the object files.
     for item in dirs :
         out = outdir + item
+        
         create_dir(out)
-        cmd = ["sh", "-c", "cp " + item + "/*.h " + out]
+        #cmd = ["sh", "-c", "cp " + item + "/*.h " + out]
+        agrs = item + "/*.h " + out
+        
+        agrs = agrs.replace("/","\\")
+       
+        cmd = 'copy /y ' + agrs + ' > NUL'               
 
         headers = [f for f in listdir(item) if f.endswith(".h")]
+        
 
         if (len(headers) > 0) :
-            call(cmd)
+            #print(headers)
+            #call(cmd)
+            os.system(cmd)
 #
 # Search the given folder structure for a file matching the given prefic and postfix. 
 # Return the first match we find.
@@ -119,15 +142,22 @@ def find_file(prefix, postfix, directory) :
                 return dirpath + "/" + f;
 
 # Determine our target
-targetnamestring = check_output(["mbed","target"])
-targetname = targetnamestring[targetnamestring.index(" ") + 1:].strip()
+targetnamestring = check_output(["mbed","target"]).decode("utf-8") 
+#print (targetnamestring)
+#targetname = targetnamestring[targetnamestring.index(" ") + 1:].strip()
+#print ("This is targetname:")
+#print (targetname)
+#print ("End")
+targetname = "NUCLEO_L452RE_P"
 
 # The file containing the command line linker
-linkfilename = find_file (".link_files", ".txt", "BUILD/" + targetname + "/GCC_ARM")
+#linkfilename = find_file (".link_files", ".txt", "BUILD/" + targetname + "/GCC_ARM")
+linkfilename = find_file (".link_", ".txt", "BUILD/" + targetname + "/GCC_ARM")
+#print (linkfilename)
 
 # The file containing the compile time include paths 
 includefilename = find_file (".includes_", ".txt", "BUILD/" + targetname + "/GCC_ARM")
-
+print (includefilename)
 # The directory to store our output in
 outputdir = "./codal-mbedos"
 
@@ -140,11 +170,9 @@ create_dir(outputdir)
 create_dir(outputdir+"/obj")
 #
 print("Creating codal-mbedos library...")
-
-# We never used this file
 #generate_lib(linkfilename, outputdir + "/mbedos.o") 
-
-generate_o(linkfilename, outputdir + "/lib") 
+print("Creating codal-mbedos object...")
+generate_o(linkfilename, outputdir + "/obj") 
 #
 print("Creating codal-mbedos includes...")
 generate_includes(includefilename, outputdir + "/inc")
