@@ -18,15 +18,15 @@
 #define MBED_CALLBACK_H
 
 #include <cstring>
-// TQD #include <mstd_cstddef>
+// TQD #include <cstddef>
 #include <cstddef>
 #include <stdint.h>
-#include <mstd_new>
+#include <new>
 #include "platform/mbed_assert.h"
 #include "platform/mbed_toolchain.h"
-//TQD #include <mstd_type_traits>
+//TQD #include <type_traits>
 #include <type_traits>
-// TQD #include <mstd_functional>
+// TQD #include <functional>
 #include <functional>
 
 // Controlling switches from config:
