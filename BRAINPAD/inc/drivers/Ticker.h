@@ -18,7 +18,7 @@
 #define MBED_TICKER_H
 
 #include <chrono>
-#include <mstd_utility>
+#include <utility>
 #include "drivers/TickerDataClock.h"
 #include "drivers/TimerEvent.h"
 #include "platform/Callback.h"
