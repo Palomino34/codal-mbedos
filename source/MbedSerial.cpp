@@ -58,7 +58,7 @@ namespace codal
           *
           *       Buffers aren't allocated until the first send or receive respectively.
           */
-        Serial::Serial(PinName tx, PinName rx, uint8_t rxBufferSize, uint8_t txBufferSize) : codal::Serial(tx, rx)/*, mbed::RawSerial(tx,rx)*/
+        Serial::Serial(PinName tx, PinName rx, uint8_t rxBufferSize, uint8_t txBufferSize) : codal::Serial(tx, rx), mbed::RawSerial(tx,rx)
         {
             // + 1 so there is a usable buffer size, of the size the user requested.
             this->rxBuffSize = rxBufferSize + 1;
@@ -95,7 +95,7 @@ namespace codal
                 return;
 
             //get the received character
-            char c = 0;//getc(); TQD
+            char c = getc();
 
             int delimeterOffset = 0;
             int delimLength = this->delimeters.length();
@@ -144,7 +144,7 @@ namespace codal
                 return;
 
             //send our current char
-            //putc(txBuff[txBuffTail]); //TQD
+            putc(txBuff[txBuffTail]);
 
             uint16_t nextTail = (txBuffTail + 1) % txBuffSize;
 
@@ -818,7 +818,7 @@ namespace codal
 
             this->baudrate = baudrate;
 
-            /*RawSerial::baud(baudrate);*/
+            RawSerial::baud(baudrate);
 
             return DEVICE_OK;
         }
@@ -845,7 +845,7 @@ namespace codal
 
             detach(RxInterrupt);
 
-            // serial_init(&_serial, tx, rx);  TQD
+            serial_init(&_serial, tx, rx);
 
             attach(RxInterrupt, &Serial::dataReceived);
 
@@ -1143,7 +1143,7 @@ namespace codal
           */
         int Serial::attach(SerialInterruptType interruptType, void (Serial::*fp)())
         {
-            /*mbed::RawSerial::attach(callback(this, fp), (interruptType == RxInterrupt) ? RxIrq : TxIrq);*/
+            mbed::RawSerial::attach(callback(this, fp), (interruptType == RxInterrupt) ? RxIrq : TxIrq);
             return DEVICE_OK;
         }
 
@@ -1157,7 +1157,7 @@ namespace codal
         int Serial::detach(SerialInterruptType interruptType)
         {
             //we detach by sending a bad value to attach, for some weird reason...
-            /*mbed::RawSerial::attach(callback((Serial *)NULL, &Serial::dataReceived),(interruptType == RxInterrupt) ? RxIrq : TxIrq);*/
+            mbed::RawSerial::attach(callback((Serial *)NULL, &Serial::dataReceived),(interruptType == RxInterrupt) ? RxIrq : TxIrq);
             return DEVICE_OK;
         }
     }
