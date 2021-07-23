@@ -1,6 +1,5 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2013 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +16,24 @@
 #ifndef MBED_H
 #define MBED_H
 
-#include "mbed_config.h"
-#include "platform/mbed_version.h"
+#define MBED_LIBRARY_VERSION 158
 
-#if MBED_CONF_RTOS_API_PRESENT
+#if MBED_CONF_RTOS_PRESENT
+// RTOS present, this is valid only for mbed OS 5
+#define MBED_MAJOR_VERSION 5
+#define MBED_MINOR_VERSION 7
+#define MBED_PATCH_VERSION 3
+
+#else
+// mbed 2
+#define MBED_MAJOR_VERSION 2
+#define MBED_MINOR_VERSION 0
+#define MBED_PATCH_VERSION MBED_LIBRARY_VERSION
+#endif
+
+#define MBED_ENCODE_VERSION(major, minor, patch) ((major)*10000 + (minor)*100 + (patch))
+#define MBED_VERSION MBED_ENCODE_VERSION(MBED_MAJOR_VERSION, MBED_MINOR_VERSION, MBED_PATCH_VERSION)        
+#if MBED_CONF_RTOS_PRESENT
 #include "rtos/rtos.h"
 #endif
 
@@ -64,37 +77,29 @@
 #include "drivers/AnalogIn.h"
 #include "drivers/AnalogOut.h"
 #include "drivers/PwmOut.h"
+#include "drivers/Serial.h"
 #include "drivers/SPI.h"
 #include "drivers/SPISlave.h"
 #include "drivers/I2C.h"
 #include "drivers/I2CSlave.h"
+#include "drivers/Ethernet.h"
 #include "drivers/CAN.h"
-#include "drivers/RawCAN.h"
-#include "drivers/UnbufferedSerial.h"
-#include "drivers/BufferedSerial.h"
+#include "drivers/RawSerial.h"
+#include "drivers/UARTSerial.h"
 #include "drivers/FlashIAP.h"
-#include "drivers/MbedCRC.h"
-#include "drivers/QSPI.h"
-#include "drivers/Watchdog.h"
 
 // mbed Internal components
-#include "drivers/ResetReason.h"
-#include "drivers/HighResClock.h"
 #include "drivers/Timer.h"
 #include "drivers/Ticker.h"
 #include "drivers/Timeout.h"
-#include "drivers/LowPowerClock.h"
 #include "drivers/LowPowerTimeout.h"
 #include "drivers/LowPowerTicker.h"
 #include "drivers/LowPowerTimer.h"
-#include "drivers/RealTimeClock.h"
 #include "platform/LocalFileSystem.h"
 #include "drivers/InterruptIn.h"
 #include "platform/mbed_wait_api.h"
-#include "platform/mbed_thread.h"
 #include "hal/sleep_api.h"
-#include "platform/mbed_atomic.h"
-#include "platform/mbed_power_mgmt.h"
+#include "platform/mbed_sleep.h"
 #include "platform/mbed_rtc_time.h"
 #include "platform/mbed_poll.h"
 #include "platform/ATCmdParser.h"
@@ -103,18 +108,12 @@
 #include "platform/DirHandle.h"
 #include "platform/CriticalSectionLock.h"
 #include "platform/DeepSleepLock.h"
-#include "platform/ScopedRomWriteLock.h"
-#include "platform/ScopedRamExecutionLock.h"
-#include "platform/mbed_stats.h"
-#include "platform/Stream.h"
 
 // mbed Non-hardware components
 #include "platform/Callback.h"
-#include "platform/ScopedLock.h"
+#include "platform/FunctionPointer.h"
 
-#ifndef MBED_NO_GLOBAL_USING_DIRECTIVE
 using namespace mbed;
 using namespace std;
-#endif
 
 #endif
