@@ -23,6 +23,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "mbed_config.h"
 #include "platform/mbed_retarget.h"
 #include "platform/mbed_toolchain.h"
 #include "device.h"
