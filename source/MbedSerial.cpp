@@ -95,7 +95,7 @@ namespace codal
                 return;
 
             //get the received character
-            char c = getc();
+            char c = 0;//TQD getc();
 
             int delimeterOffset = 0;
             int delimLength = this->delimeters.length();
