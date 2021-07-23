@@ -144,7 +144,7 @@ namespace codal
                 return;
 
             //send our current char
-            putc(txBuff[txBuffTail]);
+            //TQD putc(txBuff[txBuffTail]);
 
             uint16_t nextTail = (txBuffTail + 1) % txBuffSize;
 
