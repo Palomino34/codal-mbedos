@@ -169,10 +169,10 @@ typedef enum {
 #endif
 
     // Generic signals namings
-    LED1        = PB_13,
-    LED2        = PB_13,
-    LED3        = PB_13,
-    LED4        = PB_13,
+    LED1        = PA_8,
+    LED2        = PA_8,
+    LED3        = PA_8,
+    LED4        = PA_8,
     USER_BUTTON = PC_13,
     BUTTON1     = USER_BUTTON,
     SERIAL_TX   = STDIO_UART_TX,
