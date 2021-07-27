@@ -21,6 +21,7 @@
 #ifndef __MBED_CONFIG_DATA__
 #define __MBED_CONFIG_DATA__
 
+#if 0
 // Configuration parameters
 #define MBED_CONF_EVENTS_SHARED_DISPATCH_FROM_APPLICATION 0           // set by library:events
 // #define MBED_CONF_PPP_CELL_IFACE_APN_LOOKUP               0           // set by library:ppp-cell-iface
@@ -53,5 +54,5 @@
 #define MBED_CONF_EVENTS_SHARED_HIGHPRIO_EVENTSIZE        256         // set by library:events
 // Macros
 #define UNITY_INCLUDE_CONFIG_H                                        // defined by library:utest
-
+#endif
 #endif
