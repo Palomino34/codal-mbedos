@@ -20,15 +20,11 @@
 
 namespace mbed {
 /** \addtogroup platform */
-/** @{*/
-/**
- * \defgroup platform_CircularBuffer CircularBuffer functions
- * @{
- */
 
 /** Templated Circular buffer class
  *
  *  @note Synchronization level: Interrupt safe
+ *  @ingroup platform
  */
 template<typename T, uint32_t BufferSize, typename CounterType = uint32_t>
 class CircularBuffer {
@@ -80,7 +76,7 @@ public:
      *
      * @return True if the buffer is empty, false if not
      */
-    bool empty() const {
+    bool empty() {
         core_util_critical_section_enter();
         bool is_empty = (_head == _tail) && !_full;
         core_util_critical_section_exit();
@@ -91,7 +87,7 @@ public:
      *
      * @return True if the buffer is full, false if not
      */
-    bool full() const {
+    bool full() {
         core_util_critical_section_enter();
         bool full = _full;
         core_util_critical_section_exit();
@@ -109,33 +105,12 @@ public:
         core_util_critical_section_exit();
     }
 
-    /** Get the number of elements currently stored in the circular_buffer */
-    CounterType size() const {
-        core_util_critical_section_enter();
-        CounterType elements;
-        if (!_full) {
-            if (_head < _tail) {
-                elements = BufferSize + _head - _tail;
-            } else {
-                elements = _head - _tail;
-            }
-        } else {
-            elements = BufferSize;
-        }
-        core_util_critical_section_exit();
-        return elements;
-    }
-    
 private:
     T _pool[BufferSize];
     volatile CounterType _head;
     volatile CounterType _tail;
     volatile bool _full;
 };
-
-/**@}*/
-
-/**@}*/
 
 }
 

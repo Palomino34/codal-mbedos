@@ -21,7 +21,6 @@
 #if defined (DEVICE_PWMOUT) || defined(DOXYGEN_ONLY)
 #include "hal/pwmout_api.h"
 #include "platform/mbed_critical.h"
-#include "platform/mbed_sleep.h"
 
 namespace mbed {
 /** \addtogroup drivers */
@@ -57,15 +56,9 @@ public:
      *
      *  @param pin PwmOut pin to connect to
      */
-    PwmOut(PinName pin) : _deep_sleep_locked(false) {
+    PwmOut(PinName pin) {
         core_util_critical_section_enter();
         pwmout_init(&_pwm, pin);
-        core_util_critical_section_exit();
-    }
-
-    ~PwmOut() {
-        core_util_critical_section_enter();
-        unlock_deep_sleep();
         core_util_critical_section_exit();
     }
 
@@ -78,7 +71,6 @@ public:
      */
     void write(float value) {
         core_util_critical_section_enter();
-        lock_deep_sleep();
         pwmout_write(&_pwm, value);
         core_util_critical_section_exit();
     }
@@ -159,7 +151,6 @@ public:
     }
 
     /** A operator shorthand for write()
-     *  \sa PwmOut::write()
      */
     PwmOut& operator= (float value) {
         // Underlying call is thread safe
@@ -168,7 +159,6 @@ public:
     }
 
     /** A operator shorthand for write()
-     * \sa PwmOut::write()
      */    
     PwmOut& operator= (PwmOut& rhs) {
         // Underlying call is thread safe
@@ -177,7 +167,6 @@ public:
     }
 
     /** An operator shorthand for read()
-     * \sa PwmOut::read()
      */
     operator float() {
         // Underlying call is thread safe
@@ -185,24 +174,7 @@ public:
     }
 
 protected:
-    /** Lock deep sleep only if it is not yet locked */
-    void lock_deep_sleep() {
-        if (_deep_sleep_locked == false) {
-            sleep_manager_lock_deep_sleep();
-            _deep_sleep_locked = true;
-        }
-    }
-
-    /** Unlock deep sleep in case it is locked */
-    void unlock_deep_sleep() {
-        if (_deep_sleep_locked == true) {
-            sleep_manager_unlock_deep_sleep();
-            _deep_sleep_locked = false;
-        }
-    }
-
     pwmout_t _pwm;
-    bool _deep_sleep_locked;
 };
 
 } // namespace mbed

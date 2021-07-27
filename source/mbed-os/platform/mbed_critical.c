@@ -23,6 +23,8 @@
 #include "platform/mbed_assert.h"
 #include "platform/mbed_toolchain.h"
 
+#define EXCLUSIVE_ACCESS (!defined (__CORTEX_M0) && !defined (__CORTEX_M0PLUS))
+
 static volatile uint32_t interrupt_enable_counter = 0;
 static volatile bool critical_interrupts_disabled = false;
 
@@ -32,22 +34,6 @@ bool core_util_are_interrupts_enabled(void)
     return ((__get_CPSR() & 0x80) == 0);
 #else
     return ((__get_PRIMASK() & 0x1) == 0);
-#endif
-}
-
-bool core_util_is_isr_active(void)
-{
-#if defined(__CORTEX_A9)
-    switch(__get_CPSR() & 0x1FU) {
-        case CPSR_M_USR:
-        case CPSR_M_SYS:
-            return false;
-        case CPSR_M_SVC:
-        default:
-            return true;
-    }
-#else
-    return (__get_IPSR() != 0U);
 #endif
 }
 
@@ -101,7 +87,7 @@ MBED_WEAK void core_util_critical_section_exit(void)
     }
 }
 
-#if __EXCLUSIVE_ACCESS
+#if EXCLUSIVE_ACCESS
 
 /* Supress __ldrex and __strex deprecated warnings - "#3731-D: intrinsic is deprecated" */
 #if defined (__CC_ARM) 
@@ -110,42 +96,39 @@ MBED_WEAK void core_util_critical_section_exit(void)
 
 bool core_util_atomic_cas_u8(uint8_t *ptr, uint8_t *expectedCurrentValue, uint8_t desiredValue)
 {
-    do {
-        uint8_t currentValue = __LDREXB((volatile uint8_t*)ptr);
-        if (currentValue != *expectedCurrentValue) {
-            *expectedCurrentValue = currentValue;
-            __CLREX();
-            return false;
-        }
-    } while (__STREXB(desiredValue, (volatile uint8_t*)ptr));
-    return true;
+    uint8_t currentValue = __LDREXB((volatile uint8_t*)ptr);
+    if (currentValue != *expectedCurrentValue) {
+        *expectedCurrentValue = currentValue;
+        __CLREX();
+        return false;
+    }
+
+    return !__STREXB(desiredValue, (volatile uint8_t*)ptr);
 }
 
 bool core_util_atomic_cas_u16(uint16_t *ptr, uint16_t *expectedCurrentValue, uint16_t desiredValue)
 {
-    do {
-        uint16_t currentValue = __LDREXH((volatile uint16_t*)ptr);
-        if (currentValue != *expectedCurrentValue) {
-            *expectedCurrentValue = currentValue;
-            __CLREX();
-            return false;
-        }
-    } while (__STREXH(desiredValue, (volatile uint16_t*)ptr));
-    return true;
+    uint16_t currentValue = __LDREXH((volatile uint16_t*)ptr);
+    if (currentValue != *expectedCurrentValue) {
+        *expectedCurrentValue = currentValue;
+        __CLREX();
+        return false;
+    }
+
+    return !__STREXH(desiredValue, (volatile uint16_t*)ptr);
 }
 
 
 bool core_util_atomic_cas_u32(uint32_t *ptr, uint32_t *expectedCurrentValue, uint32_t desiredValue)
 {
-    do {
-        uint32_t currentValue = __LDREXW((volatile uint32_t*)ptr);
-        if (currentValue != *expectedCurrentValue) {
-            *expectedCurrentValue = currentValue;
-            __CLREX();
-            return false;
-        }
-    } while (__STREXW(desiredValue, (volatile uint32_t*)ptr));
-    return true;
+    uint32_t currentValue = __LDREXW((volatile uint32_t*)ptr);
+    if (currentValue != *expectedCurrentValue) {
+        *expectedCurrentValue = currentValue;
+        __CLREX();
+        return false;
+    }
+
+    return !__STREXW(desiredValue, (volatile uint32_t*)ptr);
 }
 
 uint8_t core_util_atomic_incr_u8(uint8_t *valuePtr, uint8_t delta)

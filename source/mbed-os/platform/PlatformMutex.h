@@ -1,10 +1,5 @@
 
 /** \addtogroup platform */
-/** @{*/
-/**
- * \defgroup platform_PlatformMutex PlatformMutex class
- * @{
- */
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2013 ARM Limited
  *
@@ -23,15 +18,14 @@
 #ifndef PLATFORM_MUTEX_H
 #define PLATFORM_MUTEX_H
 
-#include "platform/NonCopyable.h"
-
 #ifdef MBED_CONF_RTOS_PRESENT
 #include "rtos/Mutex.h"
 typedef rtos::Mutex PlatformMutex;
 #else
 /** A stub mutex for when an RTOS is not present
+ * @ingroup platform
 */
-class PlatformMutex : private mbed::NonCopyable<PlatformMutex> {
+class PlatformMutex {
 public:
     PlatformMutex() {
         // Stub
@@ -54,6 +48,3 @@ public:
 
 #endif
 
-/**@}*/
-
-/**@}*/

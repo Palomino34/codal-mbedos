@@ -19,11 +19,16 @@
 
 namespace mbed {
 
+static void donothing() {}
+
 InterruptIn::InterruptIn(PinName pin) : gpio(),
                                         gpio_irq(),
-                                        _rise(NULL),
-                                        _fall(NULL) {
+                                        _rise(),
+                                        _fall() {
     // No lock needed in the constructor
+
+    _rise = donothing;
+    _fall = donothing;
 
     gpio_irq_init(&gpio_irq, pin, (&InterruptIn::_irq_handler), (uint32_t)this);
     gpio_init_in(&gpio, pin);
@@ -51,7 +56,7 @@ void InterruptIn::rise(Callback<void()> func) {
         _rise = func;
         gpio_irq_set(&gpio_irq, IRQ_RISE, 1);
     } else {
-        _rise = NULL;
+        _rise = donothing;
         gpio_irq_set(&gpio_irq, IRQ_RISE, 0);
     }
     core_util_critical_section_exit();
@@ -63,7 +68,7 @@ void InterruptIn::fall(Callback<void()> func) {
         _fall = func;
         gpio_irq_set(&gpio_irq, IRQ_FALL, 1);
     } else {
-        _fall = NULL;
+        _fall = donothing;
         gpio_irq_set(&gpio_irq, IRQ_FALL, 0);
     }
     core_util_critical_section_exit();
@@ -72,16 +77,8 @@ void InterruptIn::fall(Callback<void()> func) {
 void InterruptIn::_irq_handler(uint32_t id, gpio_irq_event event) {
     InterruptIn *handler = (InterruptIn*)id;
     switch (event) {
-        case IRQ_RISE: 
-            if (handler->_rise) {
-                handler->_rise();
-            }
-            break;
-        case IRQ_FALL: 
-            if (handler->_fall) {
-                handler->_fall(); 
-            }
-            break;
+        case IRQ_RISE: handler->_rise(); break;
+        case IRQ_FALL: handler->_fall(); break;
         case IRQ_NONE: break;
     }
 }

@@ -15,9 +15,7 @@
  */
 #include "drivers/RawSerial.h"
 #include "platform/mbed_wait_api.h"
-#include <stdio.h>
 #include <cstdarg>
-
 
 #if DEVICE_SERIAL
 

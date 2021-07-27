@@ -18,7 +18,6 @@
 
 #include "hal/ticker_api.h"
 #include "hal/us_ticker_api.h"
-#include "platform/NonCopyable.h"
 
 namespace mbed {
 /** \addtogroup drivers */
@@ -28,14 +27,12 @@ namespace mbed {
  * @note Synchronization level: Interrupt safe
  * @ingroup drivers
  */
-class TimerEvent : private NonCopyable<TimerEvent> {
+class TimerEvent {
 public:
     TimerEvent();
     TimerEvent(const ticker_data_t *data);
 
     /** The handler registered with the underlying timer interrupt
-     *
-     *  @param id       Timer Event ID
      */
     static void irq(uint32_t id);
 
@@ -47,11 +44,8 @@ protected:
     // The handler called to service the timer event of the derived class
     virtual void handler() = 0;
 
-    // insert relative timestamp in to linked list
+    // insert in to linked list
     void insert(timestamp_t timestamp);
-
-    // insert absolute timestamp into linked list
-    void insert_absolute(us_timestamp_t timestamp);
 
     // remove from linked list, if in it
     void remove();

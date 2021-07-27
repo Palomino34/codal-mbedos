@@ -17,7 +17,6 @@
 #define MBED_ETHERNET_H
 
 #include "platform/platform.h"
-#include "platform/NonCopyable.h"
 
 #if defined (DEVICE_ETHERNET) || defined(DOXYGEN_ONLY)
 
@@ -55,7 +54,7 @@ namespace mbed {
  * @endcode
  * @ingroup drivers
  */
-class Ethernet : private NonCopyable<Ethernet> {
+class Ethernet {
 
 public:
 
@@ -112,16 +111,15 @@ public:
 
     /** Read from an recevied ethernet packet.
      *
-     *  After receive returned a number bigger than 0 it is
+     *  After receive returnd a number bigger than 0it is
      *  possible to read bytes from this packet.
+     *  Read will write up to size bytes into data.
      *
-     *  @param data      Pointer to data packet
-     *  @param size      Size of data to be read.
-     *  @returns         The number of byte read.
-     *
-     *  @note It is possible to use read multiple times.
+     *  It is possible to use read multible times.
      *  Each time read will start reading after the last read byte before.
      *
+     *  @returns
+     *  The number of byte read.
      */
     int read(char *data, int size);
 

@@ -27,7 +27,6 @@
 #include "flash_api.h"
 #include "platform/SingletonPtr.h"
 #include "platform/PlatformMutex.h"
-#include "platform/NonCopyable.h"
 
 namespace mbed {
 
@@ -38,7 +37,7 @@ namespace mbed {
  * @note Synchronization level: Thread safe
  * @ingroup drivers
  */
-class FlashIAP : private NonCopyable<FlashIAP> {
+class FlashIAP {
 public:
     FlashIAP();
     ~FlashIAP();
@@ -112,7 +111,6 @@ public:
 
     /** Get the program page size
      *
-     *  The page size defines the writable page size
      *  @return Size of a program page in bytes
      */
     uint32_t get_page_size() const;

@@ -16,23 +16,23 @@
 #include "drivers/SerialBase.h"
 #include "platform/mbed_wait_api.h"
 #include "platform/mbed_critical.h"
-#include "platform/mbed_sleep.h"
 
 #if DEVICE_SERIAL
 
 namespace mbed {
 
+static void donothing() {};
+
 SerialBase::SerialBase(PinName tx, PinName rx, int baud) :
 #if DEVICE_SERIAL_ASYNCH
                                                  _thunk_irq(this), _tx_usage(DMA_USAGE_NEVER),
-                                                 _rx_usage(DMA_USAGE_NEVER), _tx_callback(NULL),
-                                                 _rx_callback(NULL),
+                                                 _rx_usage(DMA_USAGE_NEVER),
 #endif
                                                 _serial(), _baud(baud) {
     // No lock needed in the constructor
 
     for (size_t i = 0; i < sizeof _irq / sizeof _irq[0]; i++) {
-        _irq[i] = NULL;
+        _irq[i] = donothing;
     }
 
     serial_init(&_serial, tx, rx);
@@ -73,18 +73,10 @@ void SerialBase::attach(Callback<void()> func, IrqType type) {
     // Disable interrupts when attaching interrupt handler
     core_util_critical_section_enter();
     if (func) {
-        // lock deep sleep only the first time
-        if (!_irq[type]) {
-            sleep_manager_lock_deep_sleep();
-        } 
         _irq[type] = func;
         serial_irq_set(&_serial, (SerialIrq)type, 1);
     } else {
-        // unlock deep sleep only the first time
-        if (_irq[type]) {
-            sleep_manager_unlock_deep_sleep();
-        } 
-        _irq[type] = NULL;
+        _irq[type] = donothing;
         serial_irq_set(&_serial, (SerialIrq)type, 0);
     }
     core_util_critical_section_exit();
@@ -93,9 +85,7 @@ void SerialBase::attach(Callback<void()> func, IrqType type) {
 
 void SerialBase::_irq_handler(uint32_t id, SerialIrq irq_type) {
     SerialBase *handler = (SerialBase*)id;
-    if (handler->_irq[irq_type]) {
-        handler->_irq[irq_type]();
-    }
+    handler->_irq[irq_type]();
 }
 
 int SerialBase::_base_getc() {
@@ -131,16 +121,6 @@ void SerialBase::lock() {
 
 void SerialBase:: unlock() {
     // Stub
-}
-
-SerialBase::~SerialBase()
-{
-    // No lock needed in destructor
-
-    // Detaching interrupts releases the sleep lock if it was locked
-    for (int irq = 0; irq < IrqCnt; irq++) {
-        attach(NULL, (IrqType)irq);
-    }
 }
 
 #if DEVICE_SERIAL_FC
@@ -193,27 +173,16 @@ void SerialBase::start_write(const void *buffer, int buffer_size, char buffer_wi
     _tx_callback = callback;
 
     _thunk_irq.callback(&SerialBase::interrupt_handler_asynch);
-    sleep_manager_lock_deep_sleep();
     serial_tx_asynch(&_serial, buffer, buffer_size, buffer_width, _thunk_irq.entry(), event, _tx_usage);
 }
 
 void SerialBase::abort_write(void)
 {
-    // rx might still be active
-    if (_rx_callback) {
-        sleep_manager_unlock_deep_sleep();
-    }
-    _tx_callback = NULL;
     serial_tx_abort_asynch(&_serial);
 }
 
 void SerialBase::abort_read(void)
 {
-    // tx might still be active
-    if (_tx_callback) {
-        sleep_manager_unlock_deep_sleep();
-    }
-    _rx_callback = NULL;
     serial_rx_abort_asynch(&_serial);
 }
 
@@ -259,7 +228,6 @@ void SerialBase::start_read(void *buffer, int buffer_size, char buffer_width, co
 {
     _rx_callback = callback;
     _thunk_irq.callback(&SerialBase::interrupt_handler_asynch);
-    sleep_manager_lock_deep_sleep();
     serial_rx_asynch(&_serial, buffer, buffer_size, buffer_width, _thunk_irq.entry(), event, char_match, _rx_usage);
 }
 
@@ -267,21 +235,13 @@ void SerialBase::interrupt_handler_asynch(void)
 {
     int event = serial_irq_handler_asynch(&_serial);
     int rx_event = event & SERIAL_EVENT_RX_MASK;
-    bool unlock_deepsleep = false;
-
     if (_rx_callback && rx_event) {
-        unlock_deepsleep = true;
         _rx_callback.call(rx_event);
     }
 
     int tx_event = event & SERIAL_EVENT_TX_MASK;
     if (_tx_callback && tx_event) {
-        unlock_deepsleep = true;
         _tx_callback.call(tx_event);
-    }
-    // unlock if tx or rx events are generated
-    if (unlock_deepsleep) {
-        sleep_manager_unlock_deep_sleep();
     }
 }
 

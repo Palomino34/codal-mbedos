@@ -25,28 +25,21 @@ namespace mbed {
 void Ticker::detach() {
     core_util_critical_section_enter();
     remove();
-    // unlocked only if we were attached (we locked it) and this is not low power ticker
-    if(_function && _lock_deepsleep) {
-        sleep_manager_unlock_deep_sleep();
-    }
-
     _function = 0;
     core_util_critical_section_exit();
 }
 
-void Ticker::setup(us_timestamp_t t) {
+void Ticker::setup(timestamp_t t) {
     core_util_critical_section_enter();
     remove();
     _delay = t;
-    insert_absolute(_delay + ticker_read_us(_ticker_data));
+    insert(_delay + ticker_read(_ticker_data));
     core_util_critical_section_exit();
 }
 
 void Ticker::handler() {
-    insert_absolute(event.timestamp + _delay);
-    if (_function) {
-        _function();
-    }
+    insert(event.timestamp + _delay);
+    _function();
 }
 
 } // namespace mbed

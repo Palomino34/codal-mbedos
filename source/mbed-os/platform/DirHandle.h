@@ -19,15 +19,9 @@
 #include <stdint.h>
 #include "platform/platform.h"
 #include "platform/FileHandle.h"
-#include "platform/NonCopyable.h"
 
 namespace mbed {
 /** \addtogroup platform */
-/** @{*/
-/**
- * \defgroup platform_DirHandle DirHandle functions
- * @{
- */
 
 
 /** Represents a directory stream. Objects of this type are returned
@@ -45,8 +39,9 @@ namespace mbed {
  *
  *  @note to create a directory, @see Dir
  *  @note Synchronization level: Set by subclass
+ *  @ingroup platform
  */
-class DirHandle : private NonCopyable<DirHandle> {
+class DirHandle {
 public:
     virtual ~DirHandle() {}
 
@@ -59,7 +54,7 @@ public:
 
     /** Close a directory
      *
-     *  @return          0 on success, negative error code on failure
+     *  return          0 on success, negative error code on failure
      */
     virtual int close() = 0;
 
@@ -146,9 +141,7 @@ public:
     virtual void seekdir(off_t location) { seek(location); }
 };
 
-/**@}*/
 
-/**@}*/
 } // namespace mbed
 
 #endif /* MBED_DIRHANDLE_H */

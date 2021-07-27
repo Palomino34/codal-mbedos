@@ -156,7 +156,6 @@ int i2c_byte_write(i2c_t *obj, int data);
 
 /** Configure I2C as slave or master.
  *  @param obj The I2C object
- *  @param enable_slave Enable i2c hardware so you can receive events with ::i2c_slave_receive
  *  @return non-zero if a value is available
  */
 void i2c_slave_mode(i2c_t *obj, int enable_slave);
@@ -170,16 +169,12 @@ int  i2c_slave_receive(i2c_t *obj);
 
 /** Configure I2C as slave or master.
  *  @param obj The I2C object
- *  @param data    The buffer for receiving
- *  @param length  Number of bytes to read
  *  @return non-zero if a value is available
  */
 int  i2c_slave_read(i2c_t *obj, char *data, int length);
 
 /** Configure I2C as slave or master.
  *  @param obj The I2C object
- *  @param data    The buffer for sending
- *  @param length  Number of bytes to write
  *  @return non-zero if a value is available
  */
 int  i2c_slave_write(i2c_t *obj, const char *data, int length);
@@ -213,7 +208,6 @@ void i2c_slave_address(i2c_t *obj, int idx, uint32_t address, uint32_t mask);
  *  @param address   The address to be set - 7bit or 9bit
  *  @param stop      If true, stop will be generated after the transfer is done
  *  @param handler   The I2C IRQ handler to be set
- *  @param event     Event mask for the transfer. See \ref hal_I2CEvents
  *  @param hint      DMA hint usage
  */
 void i2c_transfer_asynch(i2c_t *obj, const void *tx, size_t tx_length, void *rx, size_t rx_length, uint32_t address, uint32_t stop, uint32_t handler, uint32_t event, DMAUsage hint);

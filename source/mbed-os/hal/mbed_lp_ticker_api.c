@@ -17,9 +17,7 @@
 
 #if DEVICE_LOWPOWERTIMER
 
-static ticker_event_queue_t events = { 0 };
-
-static ticker_irq_handler_type irq_handler = ticker_irq_handler;
+static ticker_event_queue_t events;
 
 static const ticker_interface_t lp_interface = {
     .init = lp_ticker_init,
@@ -27,8 +25,6 @@ static const ticker_interface_t lp_interface = {
     .disable_interrupt = lp_ticker_disable_interrupt,
     .clear_interrupt = lp_ticker_clear_interrupt,
     .set_interrupt = lp_ticker_set_interrupt,
-    .fire_interrupt = lp_ticker_fire_interrupt,
-    .get_info = lp_ticker_get_info,
 };
 
 static const ticker_data_t lp_data = {
@@ -41,20 +37,9 @@ const ticker_data_t* get_lp_ticker_data(void)
     return &lp_data;
 }
 
-ticker_irq_handler_type set_lp_ticker_irq_handler(ticker_irq_handler_type ticker_irq_handler)
-{
-    ticker_irq_handler_type prev_irq_handler = irq_handler;
-
-    irq_handler = ticker_irq_handler;
-
-    return prev_irq_handler;
-}
-
 void lp_ticker_irq_handler(void)
 {
-    if (irq_handler) {
-        irq_handler(&lp_data);
-    }
+    ticker_irq_handler(&lp_data);
 }
 
 #endif

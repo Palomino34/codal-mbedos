@@ -1,10 +1,6 @@
 
 /** \addtogroup platform */
 /** @{*/
-/**
- * \defgroup platform_error Error functions
- * @{
- */
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2013 ARM Limited
  *
@@ -23,12 +19,7 @@
 #ifndef MBED_ERROR_H
 #define MBED_ERROR_H
 
-
-
 /** To generate a fatal compile-time error, you can use the pre-processor #error directive.
- *
- * @param format    C string that contains data stream to be printed.
- *                  Code snippets below show valid format.
  *
  * @code
  * #error "That shouldn't have happened!"
@@ -63,13 +54,12 @@
  *     error("expected x to be less than 5, but got %d", x);
  * }
  * @endcode
- *
- *
  */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 void error(const char* format, ...);
 
 #ifdef __cplusplus
@@ -78,5 +68,4 @@ void error(const char* format, ...);
 
 #endif
 
-/** @}*/
 /** @}*/

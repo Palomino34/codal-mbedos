@@ -19,7 +19,6 @@
 #include "cmsis.h"
 #include "platform/CallChain.h"
 #include "platform/PlatformMutex.h"
-#include "platform/NonCopyable.h"
 #include <string.h>
 
 namespace mbed {
@@ -54,20 +53,14 @@ namespace mbed {
  * @endcode
  * @ingroup drivers
  */
-class InterruptManager : private NonCopyable<InterruptManager> {
+class InterruptManager {
 public:
-    /** Get the instance of InterruptManager Class
-     *
-     *  @return the only instance of this class
+    /** Return the only instance of this class
      */
-    MBED_DEPRECATED_SINCE("mbed-os-5.6", "This class is not part of the "
-        "public API of mbed-os and is being removed in the future.")
     static InterruptManager* get();
 
     /** Destroy the current instance of the interrupt manager
      */
-    MBED_DEPRECATED_SINCE("mbed-os-5.6", "This class is not part of the "
-        "public API of mbed-os and is being removed in the future.")
     static void destroy();
 
     /** Add a handler for an interrupt at the end of the handler list
@@ -78,8 +71,6 @@ public:
      *  @returns
      *  The function object created for 'function'
      */
-    MBED_DEPRECATED_SINCE("mbed-os-5.6", "This class is not part of the "
-        "public API of mbed-os and is being removed in the future.")
     pFunctionPointer_t add_handler(void (*function)(void), IRQn_Type irq) {
         // Underlying call is thread safe
         return add_common(function, irq);
@@ -93,8 +84,6 @@ public:
      *  @returns
      *  The function object created for 'function'
      */
-    MBED_DEPRECATED_SINCE("mbed-os-5.6", "This class is not part of the "
-        "public API of mbed-os and is being removed in the future.")
     pFunctionPointer_t add_handler_front(void (*function)(void), IRQn_Type irq) {
         // Underlying call is thread safe
         return add_common(function, irq, true);
@@ -110,8 +99,6 @@ public:
      *  The function object created for 'tptr' and 'mptr'
      */
     template<typename T>
-    MBED_DEPRECATED_SINCE("mbed-os-5.6", "This class is not part of the "
-        "public API of mbed-os and is being removed in the future.")
     pFunctionPointer_t add_handler(T* tptr, void (T::*mptr)(void), IRQn_Type irq) {
         // Underlying call is thread safe
         return add_common(tptr, mptr, irq);
@@ -127,8 +114,6 @@ public:
      *  The function object created for 'tptr' and 'mptr'
      */
     template<typename T>
-    MBED_DEPRECATED_SINCE("mbed-os-5.6", "This class is not part of the "
-        "public API of mbed-os and is being removed in the future.")
     pFunctionPointer_t add_handler_front(T* tptr, void (T::*mptr)(void), IRQn_Type irq) {
         // Underlying call is thread safe
         return add_common(tptr, mptr, irq, true);
@@ -142,8 +127,6 @@ public:
      *  @returns
      *  true if the handler was found and removed, false otherwise
      */
-    MBED_DEPRECATED_SINCE("mbed-os-5.6", "This class is not part of the "
-        "public API of mbed-os and is being removed in the future.")
     bool remove_handler(pFunctionPointer_t handler, IRQn_Type irq);
 
 private:
@@ -152,6 +135,12 @@ private:
 
     void lock();
     void unlock();
+
+    // We declare the copy contructor and the assignment operator, but we don't
+    // implement them. This way, if someone tries to copy/assign our instance,
+    // he will get an error at compile time.
+    InterruptManager(const InterruptManager&);
+    InterruptManager& operator =(const InterruptManager&);
 
     template<typename T>
     pFunctionPointer_t add_common(T *tptr, void (T::*mptr)(void), IRQn_Type irq, bool front=false) {

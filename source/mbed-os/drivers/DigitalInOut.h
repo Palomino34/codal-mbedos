@@ -112,7 +112,6 @@ public:
     }
 
     /** A shorthand for write()
-     * \sa DigitalInOut::write()
      */
     DigitalInOut& operator= (int value) {
         // Underlying write is thread safe
@@ -120,9 +119,6 @@ public:
         return *this;
     }
 
-    /** A shorthand for write()
-     * \sa DigitalInOut::write()
-     */
     DigitalInOut& operator= (DigitalInOut& rhs) {
         core_util_critical_section_enter();
         write(rhs.read());
@@ -131,7 +127,6 @@ public:
     }
 
     /** A shorthand for read()
-     * \sa DigitalInOut::read()
      */
     operator int() {
         // Underlying call is thread safe

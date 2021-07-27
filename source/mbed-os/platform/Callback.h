@@ -24,15 +24,12 @@
 
 namespace mbed {
 /** \addtogroup platform */
-/** @{*/
-/**
- * \defgroup platform_Callback Callback class
- * @{
- */
+
 
 /** Callback class based on template specialization
  *
  * @note Synchronization level: Not protected
+ * @ingroup platform
  */
 template <typename F>
 class Callback;
@@ -70,6 +67,7 @@ namespace detail {
 /** Callback class based on template specialization
  *
  * @note Synchronization level: Not protected
+ * @ingroup platform
  */
 template <typename R>
 class Callback<R()> {
@@ -79,7 +77,7 @@ public:
      */
     Callback(R (*func)() = 0) {
         if (!func) {
-            memset(this, 0, sizeof(Callback));
+            _ops = 0;
         } else {
             generate(func);
         }
@@ -592,7 +590,6 @@ private:
 
         MBED_STATIC_ASSERT(sizeof(Callback) - sizeof(_ops) >= sizeof(F),
                 "Type F must not exceed the size of the Callback class");
-        memset(this, 0, sizeof(Callback));
         new (this) F(f);
         _ops = &ops;
     }
@@ -644,6 +641,7 @@ private:
 /** Callback class based on template specialization
  *
  * @note Synchronization level: Not protected
+ * @ingroup platform
  */
 template <typename R, typename A0>
 class Callback<R(A0)> {
@@ -653,7 +651,7 @@ public:
      */
     Callback(R (*func)(A0) = 0) {
         if (!func) {
-            memset(this, 0, sizeof(Callback));
+            _ops = 0;
         } else {
             generate(func);
         }
@@ -1167,7 +1165,6 @@ private:
 
         MBED_STATIC_ASSERT(sizeof(Callback) - sizeof(_ops) >= sizeof(F),
                 "Type F must not exceed the size of the Callback class");
-        memset(this, 0, sizeof(Callback));
         new (this) F(f);
         _ops = &ops;
     }
@@ -1219,6 +1216,7 @@ private:
 /** Callback class based on template specialization
  *
  * @note Synchronization level: Not protected
+ * @ingroup platform
  */
 template <typename R, typename A0, typename A1>
 class Callback<R(A0, A1)> {
@@ -1228,7 +1226,7 @@ public:
      */
     Callback(R (*func)(A0, A1) = 0) {
         if (!func) {
-            memset(this, 0, sizeof(Callback));
+            _ops = 0;
         } else {
             generate(func);
         }
@@ -1743,7 +1741,6 @@ private:
 
         MBED_STATIC_ASSERT(sizeof(Callback) - sizeof(_ops) >= sizeof(F),
                 "Type F must not exceed the size of the Callback class");
-        memset(this, 0, sizeof(Callback));
         new (this) F(f);
         _ops = &ops;
     }
@@ -1795,6 +1792,7 @@ private:
 /** Callback class based on template specialization
  *
  * @note Synchronization level: Not protected
+ * @ingroup platform
  */
 template <typename R, typename A0, typename A1, typename A2>
 class Callback<R(A0, A1, A2)> {
@@ -1804,7 +1802,7 @@ public:
      */
     Callback(R (*func)(A0, A1, A2) = 0) {
         if (!func) {
-            memset(this, 0, sizeof(Callback));
+            _ops = 0;
         } else {
             generate(func);
         }
@@ -2320,7 +2318,6 @@ private:
 
         MBED_STATIC_ASSERT(sizeof(Callback) - sizeof(_ops) >= sizeof(F),
                 "Type F must not exceed the size of the Callback class");
-        memset(this, 0, sizeof(Callback));
         new (this) F(f);
         _ops = &ops;
     }
@@ -2372,6 +2369,7 @@ private:
 /** Callback class based on template specialization
  *
  * @note Synchronization level: Not protected
+ * @ingroup platform
  */
 template <typename R, typename A0, typename A1, typename A2, typename A3>
 class Callback<R(A0, A1, A2, A3)> {
@@ -2381,7 +2379,7 @@ public:
      */
     Callback(R (*func)(A0, A1, A2, A3) = 0) {
         if (!func) {
-            memset(this, 0, sizeof(Callback));
+            _ops = 0;
         } else {
             generate(func);
         }
@@ -2898,7 +2896,6 @@ private:
 
         MBED_STATIC_ASSERT(sizeof(Callback) - sizeof(_ops) >= sizeof(F),
                 "Type F must not exceed the size of the Callback class");
-        memset(this, 0, sizeof(Callback));
         new (this) F(f);
         _ops = &ops;
     }
@@ -2950,6 +2947,7 @@ private:
 /** Callback class based on template specialization
  *
  * @note Synchronization level: Not protected
+ * @ingroup platform
  */
 template <typename R, typename A0, typename A1, typename A2, typename A3, typename A4>
 class Callback<R(A0, A1, A2, A3, A4)> {
@@ -2959,7 +2957,7 @@ public:
      */
     Callback(R (*func)(A0, A1, A2, A3, A4) = 0) {
         if (!func) {
-            memset(this, 0, sizeof(Callback));
+            _ops = 0;
         } else {
             generate(func);
         }
@@ -3477,7 +3475,6 @@ private:
 
         MBED_STATIC_ASSERT(sizeof(Callback) - sizeof(_ops) >= sizeof(F),
                 "Type F must not exceed the size of the Callback class");
-        memset(this, 0, sizeof(Callback));
         new (this) F(f);
         _ops = &ops;
     }
@@ -4543,9 +4540,6 @@ Callback<R(A0, A1, A2, A3, A4)> callback(const volatile U *obj, R (*func)(const 
     return Callback<R(A0, A1, A2, A3, A4)>(func, obj);
 }
 
-/**@}*/
-
-/**@}*/
 
 } // namespace mbed
 

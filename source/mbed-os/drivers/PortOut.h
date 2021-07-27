@@ -83,23 +83,18 @@ public:
     }
 
     /** A shorthand for write()
-     * \sa PortOut::write()
      */
     PortOut& operator= (int value) {
         write(value);
         return *this;
     }
 
-    /** A shorthand for read()
-     * \sa PortOut::read()
-     */
     PortOut& operator= (PortOut& rhs) {
         write(rhs.read());
         return *this;
     }
 
     /** A shorthand for read()
-     * \sa PortOut::read()
      */
     operator int() {
         return read();

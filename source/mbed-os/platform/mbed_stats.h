@@ -1,10 +1,6 @@
 
 /** \addtogroup platform */
 /** @{*/
-/**
- * \defgroup platform_stats stats functions
- * @{
- */
 /* mbed Microcontroller Library
  * Copyright (c) 2016-2016 ARM Limited
  *
@@ -29,9 +25,6 @@
 extern "C" {
 #endif
 
-/**
- * struct mbed_stats_heap_t definition
- */
 typedef struct {
     uint32_t current_size;      /**< Bytes allocated currently. */
     uint32_t max_size;          /**< Max bytes allocated at a given time. */
@@ -48,26 +41,23 @@ typedef struct {
  */
 void mbed_stats_heap_get(mbed_stats_heap_t *stats);
 
-/**
- * struct mbed_stats_stack_t definition
- */
 typedef struct {
-    uint32_t thread_id;         /**< Identifier for thread that owns the stack or 0 if multiple threads. */
-    uint32_t max_size;          /**< Maximum number of bytes used on the stack. */
-    uint32_t reserved_size;     /**< Current number of bytes allocated for the stack. */
-    uint32_t stack_cnt;         /**< Number of stacks stats accumulated in the structure. */
+    uint32_t thread_id;         /**< Identifier for thread that owns the stack. */
+    uint32_t max_size;          /**< Sum of the maximum number of bytes used in each stack. */
+    uint32_t reserved_size;     /**< Current number of bytes allocated for all stacks. */
+    uint32_t stack_cnt;         /**< Number of stacks currently allocated. */
 } mbed_stats_stack_t;
 
 /**
- *  Fill the passed in structure with stack stats accumulated for all threads. The thread_id will be 0
- *  and stack_cnt will represent number of threads.
+ *  Fill the passed in structure with stack stats.
  *
  *  @param stats    A pointer to the mbed_stats_stack_t structure to fill
  */
 void mbed_stats_stack_get(mbed_stats_stack_t *stats);
 
 /**
- *  Fill the passed array of stat structures with the stack stats for each available thread.
+ *  Fill the passed array of stat structures with the stack stats
+ *  for each available stack.
  *
  *  @param stats    A pointer to an array of mbed_stats_stack_t structures to fill
  *  @param count    The number of mbed_stats_stack_t structures in the provided array
@@ -81,7 +71,5 @@ size_t mbed_stats_stack_get_each(mbed_stats_stack_t *stats, size_t count);
 #endif
 
 #endif
-
-/** @}*/
 
 /** @}*/

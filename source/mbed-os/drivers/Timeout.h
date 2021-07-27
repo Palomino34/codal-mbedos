@@ -17,8 +17,6 @@
 #define MBED_TIMEOUT_H
 
 #include "drivers/Ticker.h"
-#include "platform/NonCopyable.h"
-#include "platform/mbed_sleep.h"
 
 namespace mbed {
 /** \addtogroup drivers */
@@ -54,7 +52,7 @@ namespace mbed {
  * @endcode
  * @ingroup drivers
  */
-class Timeout : public Ticker, private NonCopyable<Timeout> {
+class Timeout : public Ticker {
 
 protected:
     virtual void handler();

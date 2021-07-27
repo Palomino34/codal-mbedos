@@ -1,10 +1,6 @@
 
 /** \addtogroup platform */
 /** @{*/
-/**
- * \defgroup platform_SingletonPtr SingletonPtr class
- * @{
- */
 /* mbed Microcontroller Library
  * Copyright (c) 2006-2013 ARM Limited
  *
@@ -27,11 +23,11 @@
 #include <new>
 #include "platform/mbed_assert.h"
 #ifdef MBED_CONF_RTOS_PRESENT
-#include "cmsis_os2.h"
+#include "cmsis_os.h"
 #endif
 
 #ifdef MBED_CONF_RTOS_PRESENT
-extern osMutexId_t singleton_mutex_id;
+extern osMutexId singleton_mutex_id;
 #endif
 
 /** Lock the singleton mutex
@@ -43,7 +39,7 @@ extern osMutexId_t singleton_mutex_id;
 inline static void singleton_lock(void)
 {
 #ifdef MBED_CONF_RTOS_PRESENT
-    osMutexAcquire(singleton_mutex_id, osWaitForever);
+    osMutexWait(singleton_mutex_id, osWaitForever);
 #endif
 }
 
@@ -59,6 +55,7 @@ inline static void singleton_unlock(void)
     osMutexRelease (singleton_mutex_id);
 #endif
 }
+/** @}*/
 
 /** Utility class for creating an using a singleton
  *
@@ -71,6 +68,7 @@ inline static void singleton_unlock(void)
  * @note: This class is lazily initialized on first use.
  * This class is a POD type so if it is not used it will
  * be garbage collected.
+ * @ingroup platform
  */
 template <class T>
 struct SingletonPtr {
@@ -110,6 +108,4 @@ struct SingletonPtr {
 };
 
 #endif
-/**@}*/
 
-/**@}*/

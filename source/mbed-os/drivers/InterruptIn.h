@@ -25,7 +25,6 @@
 #include "platform/Callback.h"
 #include "platform/mbed_critical.h"
 #include "platform/mbed_toolchain.h"
-#include "platform/NonCopyable.h"
 
 namespace mbed {
 /** \addtogroup drivers */
@@ -57,7 +56,7 @@ namespace mbed {
  * @endcode
  * @ingroup drivers
  */
-class InterruptIn : private NonCopyable<InterruptIn> {
+class InterruptIn {
 
 public:
 
