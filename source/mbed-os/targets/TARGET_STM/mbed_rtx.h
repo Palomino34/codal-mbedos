@@ -71,7 +71,7 @@
        defined(TARGET_STM32L476JG) ||\
        defined(TARGET_STM32L476VG) ||\
        defined(TARGET_STM32L486RG))
-#define INITIAL_SP              (0x10000B00UL)
+#define INITIAL_SP              (0x20020800UL)
 
 #elif (defined(TARGET_STM32F207ZG) ||\
        defined(TARGET_STM32F405RG) ||\
