@@ -57,9 +57,10 @@ def generate_o(infilename, outdir) :
     infile = open(infilename)
 
     params = infile.readline().split(" ")
+    
 
-    for item in params :
-        if item.endswith(".o") and not item.endswith("main.o") :
+    for item in params :       
+        if item.endswith(".o\"") and not item.endswith("/main.o\"") :
             if item.startswith('"') and item.endswith('"') :
                 obj = item[1:-1]
             else :
@@ -69,12 +70,24 @@ def generate_o(infilename, outdir) :
             
             obj = obj.replace("/","\\")
             outdir = outdir.replace("/","\\")
+            
+            objNoExt = obj.replace(".o", "")
+            objNoExtPath = objNoExt.replace("BUILD\\NUCLEO_L452RE_P\\GCC_ARM-DEBUG\\", "..\\source\\")
+            
+            
+            if not os.path.exists(objNoExtPath + ".c") and not os.path.exists(objNoExtPath + ".cpp") and not os.path.exists(objNoExtPath + ".s"):
+                cmd = 'copy /y ' +  obj + ' ' + outdir + ' > NUL'
+                os.system(cmd)                
+            else:
+                print('Found ' +  obj)
+                           
+                
             #cmd = ["copy /y ", obj , outdir ]    
             #print(cmd)
             #call (cmd)
-            cmd = 'copy /y ' +  obj + ' ' + outdir + ' > NUL'
+            #cmd = 'copy /y ' +  obj + ' ' + outdir + ' > NUL'
             #print(cmd)
-            os.system(cmd)
+            #os.system(cmd)
             #shutil.copy('file1.txt', 'file3.txt')
 
 
@@ -110,25 +123,31 @@ def generate_includes(infilename, outdir) :
                 inc = inc[len(cwd):]
 
             if os.path.exists(inc) :
-                dirs.append(inc)
+                dirs.append(inc)            
 
     # We should no have filtered out all but the object files.
     for item in dirs :
         out = outdir + item
         
+        if out.startswith('./codal-mbedos/inc/./mbed-os'):
+            out1 = out[28:]
+            out1 = 'RECURSIVE_FIND_DIR(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_OUTPUT_NAME}/inc' + out1 + '" "*.h"'
+            #print(out1)
+        
         create_dir(out)
+        
         #cmd = ["sh", "-c", "cp " + item + "/*.h " + out]
         agrs = item + "/*.h " + out
         
         agrs = agrs.replace("/","\\")
        
-        cmd = 'copy /y ' + agrs + ' > NUL'               
+        cmd = 'copy /y ' + agrs + ' > NUL'                                
 
         headers = [f for f in listdir(item) if f.endswith(".h")]
         
 
         if (len(headers) > 0) :
-            #print(headers)
+            #print(cmd)
             #call(cmd)
             os.system(cmd)
 #
@@ -149,14 +168,16 @@ targetnamestring = check_output(["mbed","target"]).decode("utf-8")
 #print (targetname)
 #print ("End")
 targetname = "NUCLEO_L452RE_P"
+# targetname = "NUCLEO_L476RG"
+#targetname = "NUCLEO_F401RE"
 
 # The file containing the command line linker
 #linkfilename = find_file (".link_files", ".txt", "BUILD/" + targetname + "/GCC_ARM")
-linkfilename = find_file (".link_", ".txt", "BUILD/" + targetname + "/GCC_ARM")
-#print (linkfilename)
+linkfilename = find_file (".link_", ".txt", "BUILD/" + targetname + "/GCC_ARM-DEBUG")
+print (linkfilename)
 
 # The file containing the compile time include paths 
-includefilename = find_file (".includes_", ".txt", "BUILD/" + targetname + "/GCC_ARM")
+includefilename = find_file (".includes_", ".txt", "BUILD/" + targetname + "/GCC_ARM-DEBUG")
 print (includefilename)
 # The directory to store our output in
 outputdir = "./codal-mbedos"
@@ -169,7 +190,7 @@ outputdir = "./codal-mbedos"
 create_dir(outputdir)
 create_dir(outputdir+"/obj")
 #
-print("Creating codal-mbedos library...")
+#print("Creating codal-mbedos library...")
 #generate_lib(linkfilename, outputdir + "/mbedos.o") 
 print("Creating codal-mbedos object...")
 generate_o(linkfilename, outputdir + "/obj") 
