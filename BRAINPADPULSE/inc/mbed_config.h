@@ -23,15 +23,15 @@
 
 // Configuration parameters
 #define MBED_CONF_EVENTS_SHARED_DISPATCH_FROM_APPLICATION 0           // set by library:events
-#define MBED_CONF_PPP_CELL_IFACE_APN_LOOKUP               0           // set by library:ppp-cell-iface
-#define MBED_CONF_EVENTS_PRESENT                          1           // set by library:events
+// #define MBED_CONF_PPP_CELL_IFACE_APN_LOOKUP               0           // set by library:ppp-cell-iface
+//#define MBED_CONF_EVENTS_PRESENT                          1           // set by library:events
 #define MBED_LFS_PROG_SIZE                                64          // set by library:littlefs
-#define MBED_CONF_PLATFORM_STDIO_FLUSH_AT_EXIT            1           // set by library:platform
+// #define MBED_CONF_PLATFORM_STDIO_FLUSH_AT_EXIT            1           // set by library:platform
 #define MBED_CONF_DRIVERS_UART_SERIAL_RXBUF_SIZE          256         // set by library:drivers
 // #define MBED_CONF_NSAPI_PRESENT                           1           // set by library:nsapi
 #define MBED_CONF_TARGET_LPTICKER_LPTIM                   0           // set by target:NUCLEO_L452RE_P
 // #define MBED_CONF_FILESYSTEM_PRESENT                      1           // set by library:filesystem
-#define MBED_CONF_PPP_CELL_IFACE_BAUD_RATE                115200      // set by library:ppp-cell-iface
+// #define MBED_CONF_PPP_CELL_IFACE_BAUD_RATE                115200      // set by library:ppp-cell-iface
 #define MBED_LFS_BLOCK_SIZE                               512         // set by library:littlefs
 #define MBED_CONF_PPP_CELL_IFACE_AT_PARSER_BUFFER_SIZE    256         // set by library:ppp-cell-iface
 #define MBED_CONF_PLATFORM_FORCE_NON_COPYABLE_ERROR       0           // set by library:platform
@@ -49,7 +49,7 @@
 #define MBED_CONF_EVENTS_USE_LOWPOWER_TIMER_TICKER        0           // set by library:events
 // #define MBED_CONF_PLATFORM_STDIO_CONVERT_NEWLINES         0           // set by library:platform
 #define MBED_CONF_TARGET_LSE_AVAILABLE                    1           // set by target:FAMILY_STM32
-#define MBED_LFS_ENABLE_INFO                              0           // set by library:littlefs
+// #define MBED_LFS_ENABLE_INFO                              0           // set by library:littlefs
 #define MBED_CONF_EVENTS_SHARED_HIGHPRIO_EVENTSIZE        256         // set by library:events
 // Macros
 #define UNITY_INCLUDE_CONFIG_H                                        // defined by library:utest
