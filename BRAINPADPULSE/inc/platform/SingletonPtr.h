@@ -88,7 +88,7 @@ struct SingletonPtr {
         }
         // _ptr was not zero initialized or was
         // corrupted if this assert is hit
-        MBED_ASSERT(_ptr == (T *)&_data);
+        // MBED_ASSERT(_ptr == (T *)&_data);
         return _ptr;
     }
 
