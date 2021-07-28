@@ -39,7 +39,7 @@ extern osMutexId singleton_mutex_id;
 inline static void singleton_lock(void)
 {
 #ifdef MBED_CONF_RTOS_PRESENT
-    //osMutexWait(singleton_mutex_id, osWaitForever);
+    osMutexWait(singleton_mutex_id, osWaitForever);
 #endif
 }
 
@@ -52,7 +52,7 @@ inline static void singleton_lock(void)
 inline static void singleton_unlock(void)
 {
 #ifdef MBED_CONF_RTOS_PRESENT
-    //osMutexRelease (singleton_mutex_id);
+    osMutexRelease (singleton_mutex_id);
 #endif
 }
 /** @}*/
@@ -88,8 +88,17 @@ struct SingletonPtr {
         }
         // _ptr was not zero initialized or was
         // corrupted if this assert is hit
-        // MBED_ASSERT(_ptr == (T *)&_data);
-        return _ptr;
+        //MBED_ASSERT(_ptr == (T *)&_data);
+
+        if (_ptr == (T *)&_data) {
+          MBED_ASSERT(_ptr == (T *)&_data);
+          return _ptr;
+        }
+        else {
+          MBED_ASSERT(_ptr == (T *)&_data);
+          return _ptr;
+        }
+          
     }
 
     /** Get a pointer to the underlying singleton
