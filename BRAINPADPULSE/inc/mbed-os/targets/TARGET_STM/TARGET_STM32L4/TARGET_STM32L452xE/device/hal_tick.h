@@ -58,7 +58,7 @@
 
 
 
-#define HAL_TICK_DELAY (1000) // 1 ms
+// #define HAL_TICK_DELAY (1000) // 1 ms
 
 #ifdef __cplusplus
 }
