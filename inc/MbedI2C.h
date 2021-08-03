@@ -66,7 +66,7 @@ namespace codal
               * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the write request failed.
               */
 
-            int write(uint8_t data);
+            int write(uint16_t data);
 
             /**
               * Issues a single-byte read command.
