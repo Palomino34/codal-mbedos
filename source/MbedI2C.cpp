@@ -61,7 +61,7 @@ namespace codal
           *
           * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the write request failed.
           */
-        int I2C::write(uint8_t data)
+        int I2C::write(uint16_t data)
         {
             int ret = mb::I2C::write(data);
             return (ret >= 0) ? DEVICE_OK : DEVICE_I2C_ERROR;
